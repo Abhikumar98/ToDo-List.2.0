@@ -11,13 +11,16 @@ class TodoMain extends React.Component{
     {
         super();
         this.state = {
-            Items : ['Type in the input box <== and press enter','Or you can also click on the mic icon and speak','Speak once the button turns blue :)'],
+            Items : ['Type in the input box <== and press enter',
+                     'Or you can also click on the mic icon and speak',
+                     'Speak once the button turns blue :)'],
             microphone : false
         }
         this.addToList = this.addToList.bind(this)
         this.removeItem = this.removeItem.bind(this)
         this.handleClick = this.handleClick.bind(this)
         this.startMicrophone = this.startMicrophone.bind(this)
+        this.emptyArr = []
     }
     addToList(item){
         if (item.length > 0)
@@ -25,6 +28,8 @@ class TodoMain extends React.Component{
             this.setState({
                 Items : this.state.Items.concat([item])
             })
+            this.emptyArr.push(item)
+            localStorage.setItem("user",JSON.stringify(this.emptyArr))
         }
     }
     removeItem(index){
@@ -32,6 +37,22 @@ class TodoMain extends React.Component{
         this.setState({
             Items : this.state.Items
         })
+        console.log(index)
+        let item = this.emptyArr.splice(index,1)
+        localStorage.removeItem(item)
+    }
+    componentDidMount()
+    {
+        console.log("component Mounted")
+        if (localStorage.getItem("user"))
+        {
+            let previousData = JSON.parse(localStorage.getItem("user"))
+            this.emptyArr = [...previousData]
+            this.setState({
+                Items : previousData
+            })
+            console.log(previousData)
+        }
     }
     handleClick(){
         this.setState({
