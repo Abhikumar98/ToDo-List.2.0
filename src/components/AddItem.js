@@ -33,7 +33,7 @@ class AddItem extends React.Component{
                 break
         }
         return(
-            <div style={{display: "flex"}}>
+            <div id="add-item" style={{display: "flex"}}>
                 <form ref={input => this.formRef = input} onSubmit={this.handleSubmit} className="input-element">
                     <input 
                         ref={input=> this.userInput = input} 

@@ -119,6 +119,10 @@ button:focus{
 @media screen and (max-width : 900px){
     .list-and-input{
         display: block;
+        width: 95%;
+    }
+    #add-item{
+        justify-content: center;
     }
     ul{
         margin-top: 5%;
@@ -130,4 +134,15 @@ button:focus{
     #microphone{
         align-self: center;
     }
+}
+
+@media (min-width: 900px) and (max-width: 1350px) {
+    .list-and-input{
+        display: flex;
+        width: 85%;
+    }
+}
+
+@media (min-width: 992px){
+    
 }
