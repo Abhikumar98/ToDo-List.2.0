@@ -11,7 +11,7 @@ class TodoMain extends React.Component{
     {
         super();
         this.state = {
-            Items : ['apple','mango','banana'],
+            Items : ['Type in the input box <== and press enter','Or you can also click on the mic icon and speak','Speak once the button turns blue :)'],
             microphone : false
         }
         this.addToList = this.addToList.bind(this)
