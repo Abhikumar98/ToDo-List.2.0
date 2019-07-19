@@ -11,7 +11,7 @@ class TodoMain extends React.Component{
     {
         super();
         this.state = {
-            Items : ['Type in the input box <== and press enter',
+            items : ['Type in the input box <== and press enter',
                      'Or you can also click on the mic icon and speak',
                      'Speak once the button turns blue :)'],
             microphone : false
@@ -20,39 +20,36 @@ class TodoMain extends React.Component{
         this.removeItem = this.removeItem.bind(this)
         this.handleClick = this.handleClick.bind(this)
         this.startMicrophone = this.startMicrophone.bind(this)
-        this.emptyArr = []
+        this.storage=[]
     }
     addToList(item){
         if (item.length > 0)
         {
             this.setState({
-                Items : this.state.Items.concat([item])
+                items : this.state.items.concat([item])
             })
-            this.emptyArr.push(item)
-            localStorage.setItem("user",JSON.stringify(this.emptyArr))
         }
+        this.storage.push(item)
+        localStorage.setItem("user", JSON.stringify(this.storage))
     }
     removeItem(index){
-        (this.state.Items).splice(index,1)
+        // console.log("copystate =========>",copyState)
+        this.state.items.splice(index,1)
         this.setState({
-            Items : this.state.Items
-        })
-        console.log(index)
-        let item = this.emptyArr.splice(index,1)
-        localStorage.removeItem(item)
+            items : this.state.items
+        });
+        localStorage.setItem("user", JSON.stringify(this.state.items))
     }
-    componentDidMount()
-    {
-        console.log("component Mounted")
-        if (localStorage.getItem("user"))
+    componentDidMount(){
+        if(localStorage.getItem("user").length > 2)
         {
-            let previousData = JSON.parse(localStorage.getItem("user"))
-            this.emptyArr = [...previousData]
+            let data = [...JSON.parse(localStorage.getItem("user"))]
+            this.storage = data
             this.setState({
-                Items : previousData
+                items : data
             })
-            console.log(previousData)
         }
+        else this.setState({ items: this.state.items })
     }
     handleClick(){
         this.setState({
@@ -68,6 +65,8 @@ class TodoMain extends React.Component{
                 microphone : true
             })
             this.props.startListening()
+            console.log(this.props.listening)
+            console.log("mic on")
         }
         else{
             // =========================stops microphone listening
@@ -75,7 +74,10 @@ class TodoMain extends React.Component{
                 microphone: false
             })
             this.props.stopListening()
+            console.log("mic off")
+            console.log(this.props.listening)
             this.addToList(this.props.transcript)
+            console.log(this.props.transcript)
             this.props.resetTranscript()
         }
         if (!this.props.browserSupportsSpeechRecognition) {
@@ -83,15 +85,16 @@ class TodoMain extends React.Component{
         }
     }
     render(){
+        console.log("inside render method---------->");
         return(
             <div id="container">
                 <h1>ToDo List</h1>
                 <div className="list-and-input">
                     <AddItem microphone={this.state.microphone} startMicrophone={this.startMicrophone} addItem = {this.state.addItem} addToList={this.addToList} />
-                    { (this.state.Items).length  == 0 ? <NoItems addItem = {this.handleClick} /> :  
+                    { (this.state.items).length  === 0 ? <NoItems addItem = {this.handleClick} /> :  
                     <ul>
                         {
-                            this.state.Items.map((item,i) => <TodoList removeItem={this.removeItem} index={i} key={i} item={item} />)
+                            this.state.items.map((item,i) => <TodoList removeItem={this.removeItem} index={i} key={i} item={item} />)
                         }
                     </ul>}
                 </div>

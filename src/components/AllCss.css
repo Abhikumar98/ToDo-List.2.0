@@ -123,6 +123,7 @@ button:focus{
     }
     #add-item{
         justify-content: center;
+        flex-direction: column;
     }
     ul{
         margin-top: 5%;
