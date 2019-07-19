@@ -41,21 +41,19 @@ class TodoMain extends React.Component{
         localStorage.setItem("user", JSON.stringify(this.state.items))
     }
     componentDidMount(){
-        if (localStorage.getItem("user") != 'null')
+        if (localStorage.getItem("user") != null)
         {
-            console.log(localStorage.getItem("user"))
+            if(localStorage.getItem("user").length > 2)
+            {
+                let json = JSON.parse(localStorage.getItem("user"))
+                let data = [...json]
+                this.storage = data
+                this.setState({
+                    items : data
+                })
+            }
+            else this.setState({ items: this.state.items })
         }
-        console.log(localStorage.getItem("user"))
-        if(localStorage.getItem("user") != 'null' && localStorage.getItem("user").length > 2)
-        {
-            let json = JSON.parse(localStorage.getItem("user"))
-            let data = [...json]
-            this.storage = data
-            this.setState({
-                items : data
-            })
-        }
-        else this.setState({ items: this.state.items })
     }
     handleClick(){
         this.setState({
