@@ -41,9 +41,15 @@ class TodoMain extends React.Component{
         localStorage.setItem("user", JSON.stringify(this.state.items))
     }
     componentDidMount(){
-        if(localStorage.getItem("user").length > 2)
+        if (localStorage.getItem("user") != 'null')
         {
-            let data = [...JSON.parse(localStorage.getItem("user"))]
+            console.log(localStorage.getItem("user"))
+        }
+        console.log(localStorage.getItem("user"))
+        if(localStorage.getItem("user") != 'null' && localStorage.getItem("user").length > 2)
+        {
+            let json = JSON.parse(localStorage.getItem("user"))
+            let data = [...json]
             this.storage = data
             this.setState({
                 items : data
