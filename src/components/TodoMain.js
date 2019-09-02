@@ -4,16 +4,16 @@ import TodoList from './TodoList';
 import './AllCss.css'
 import NoItems from './NoItems';
 import SpeechRecognition from 'react-speech-recognition';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
+import CSSTransitionGroup from 'react-addons-css-transition-group';
+
 
 class TodoMain extends React.Component{
     constructor(props)
     {
         super();
         this.state = {
-            items : ['Type in the input box <== and press enter',
-                     'Or you can also click on the mic icon and speak',
-                     'Speak once the button turns blue :)'],
+            items : [],
             microphone : false
         }
         this.addToList = this.addToList.bind(this)
@@ -28,9 +28,9 @@ class TodoMain extends React.Component{
             this.setState({
                 items : this.state.items.concat([item])
             })
+            this.storage.push(item)
+            localStorage.setItem("user", JSON.stringify(this.storage))
         }
-        this.storage.push(item)
-        localStorage.setItem("user", JSON.stringify(this.storage))
     }
     removeItem(index){
         // console.log("copystate =========>",copyState)
@@ -39,21 +39,33 @@ class TodoMain extends React.Component{
             items : this.state.items
         });
         localStorage.setItem("user", JSON.stringify(this.state.items))
+
+        if (localStorage.getItem("user") === null) {
+            this.setState({
+                items: ['Type in the input box <== and press enter',
+                    'Or you can also click on the mic icon and speak',
+                    'Speak once the button turns blue :)']
+            })
+        }
     }
     componentDidMount(){
-        if (localStorage.getItem("user") != null)
+        console.log('component mounted');
+        
+        if (localStorage.getItem('user') !== null && localStorage.getItem("user").length > 2 )
         {
-            if(localStorage.getItem("user").length > 2)
-            {
                 let json = JSON.parse(localStorage.getItem("user"))
                 let data = [...json]
                 this.storage = data
                 this.setState({
                     items : data
                 })
-            }
-            else this.setState({ items: this.state.items })
         }
+        else this.setState({
+            items: ['Type in the input box <== and press enter',
+                    'Or you can also click on the mic icon and speak',
+                    'Speak once the button turns blue :)']
+            })
+
     }
     handleClick(){
         this.setState({
@@ -78,29 +90,40 @@ class TodoMain extends React.Component{
                 microphone: false
             })
             this.props.stopListening()
-            console.log("mic off")
-            console.log(this.props.listening)
             this.addToList(this.props.transcript)
-            console.log(this.props.transcript)
+
             this.props.resetTranscript()
         }
         if (!this.props.browserSupportsSpeechRecognition) {
-            console.log("not supporting");
+            alert("Thsi browser doesn't support voice recognition feature. Please use Chrome for it.")
         }
     }
     render(){
-        console.log("inside render method---------->");
         return(
             <div id="container">
                 <h1>ToDo List</h1>
                 <div className="list-and-input">
-                    <AddItem microphone={this.state.microphone} startMicrophone={this.startMicrophone} addItem = {this.state.addItem} addToList={this.addToList} />
-                    { (this.state.items).length  === 0 ? <NoItems addItem = {this.handleClick} /> :  
-                    <ul>
-                        {
-                            this.state.items.map((item,i) => <TodoList removeItem={this.removeItem} index={i} key={i} item={item} />)
-                        }
-                    </ul>}
+                    <AddItem microphone={this.state.microphone} 
+                             startMicrophone={this.startMicrophone} 
+                             addItem = {this.state.addItem} 
+                             addToList={this.addToList} />
+                    { (this.state.items).length  === 0 ? <NoItems addItem = {this.handleClick} /> :
+                        <CSSTransitionGroup
+                            component='ul'
+                            transitionName='item'
+                            transitionEnterTimeout={300}
+                            transitionAppear={true}
+                            transitionAppearTimeout={300}
+                            transitionLeaveTimeout={1}
+                        >
+                            {
+                                this.state.items.map((item,i) => <TodoList removeItem={this.removeItem} 
+                                                                            index={i} 
+                                                                            key={i} 
+                                                                            item={item} />)
+                            }
+                        </CSSTransitionGroup>
+                    }
                 </div>
             </div>
         )
