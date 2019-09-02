@@ -38,15 +38,8 @@ class TodoMain extends React.Component{
         this.setState({
             items : this.state.items
         });
+        this.storage = this.state.items;
         localStorage.setItem("user", JSON.stringify(this.state.items))
-
-        if (localStorage.getItem("user") === null) {
-            this.setState({
-                items: ['Type in the input box <== and press enter',
-                    'Or you can also click on the mic icon and speak',
-                    'Speak once the button turns blue :)']
-            })
-        }
     }
     componentDidMount(){
         console.log('component mounted');
