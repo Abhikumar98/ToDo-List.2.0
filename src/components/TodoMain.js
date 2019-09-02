@@ -54,7 +54,7 @@ class TodoMain extends React.Component{
                 })
         }
         else this.setState({
-            items: ['Type in the input box <== and press enter',
+            items: ['Type in the input box and press "enter"',
                     'Or you can also click on the mic icon and speak',
                     'Speak once the button turns blue :)']
             })
