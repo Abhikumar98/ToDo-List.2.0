@@ -74,15 +74,12 @@ class TodoMain extends React.Component{
     }
     startMicrophone()
     {
-        console.log("mic clicked")
         if(!this.state.microphone){
             // =========================starts microphone listening
             this.setState({
                 microphone : true
             })
             this.props.startListening()
-            console.log(this.props.listening)
-            console.log("mic on")
         }
         else{
             // =========================stops microphone listening
@@ -91,11 +88,10 @@ class TodoMain extends React.Component{
             })
             this.props.stopListening()
             this.addToList(this.props.transcript)
-
             this.props.resetTranscript()
         }
         if (!this.props.browserSupportsSpeechRecognition) {
-            alert("Thsi browser doesn't support voice recognition feature. Please use Chrome for it.")
+            alert("This browser doesn't support voice recognition feature. Please use Chrome for it.")
         }
     }
     render(){
